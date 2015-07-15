@@ -49,6 +49,7 @@
 #include "opencv2\xfeatures2d\nonfree.hpp"  //3.0 version
 #include "opencv2/features2d/features2d.hpp"
 #include "opencv2/opencv.hpp"
+#include"opencv2\core\mat.hpp"
 using namespace std;
 using namespace cv;
 #ifdef __cplusplus
@@ -63,6 +64,15 @@ namespace cv
 	class CV_EXPORTS_W NEWSIFT : public Feature2D
 	{
 	public:
+		CV_WRAP static Ptr<NEWSIFT> create(int nfeatures = 0, int nOctaveLayers = 3,
+			double contrastThreshold = 0.04, double edgeThreshold = 10,
+			double sigma = 1.6)
+		{
+			return makePtr<NEWSIFT>(
+				NEWSIFT(nfeatures, nOctaveLayers,
+				contrastThreshold, edgeThreshold,
+				sigma));
+		};
 		CV_WRAP explicit NEWSIFT(int nfeatures = 0, int nOctaveLayers = 3,
 			double contrastThreshold = 0.04, double edgeThreshold = 10,
 			double sigma = 1.6);
@@ -84,12 +94,20 @@ namespace cv
 			bool useProvidedKeypoints = false) const;
 
 		//virtual AlgorithmInfo* info() const;
-		CV_WRAP static Ptr<NEWSIFT> create(){ return new NEWSIFT(); };
 
 		void buildGaussianPyramid(const Mat& base, vector<Mat>& pyr, int nOctaves) const;
 		void buildDoGPyramid(const vector<Mat>& pyr, vector<Mat>& dogpyr) const;
 		void findScaleSpaceExtrema(const vector<Mat>& gauss_pyr, const vector<Mat>& dog_pyr,
 			vector<KeyPoint>& keypoints) const;
+
+		//new compute descriptor method
+//------------------------------ compute --------------------------------------
+// Compute the descriptor with a given color image and array of keypoints
+// Preconditions:  1. keypoints and images are correctly formatted
+//				   2. images and keypoints are at the same level of smotthing
+// Postconditions: descritops are filled
+//-----------------------------------------------------------------------------
+		void compute(const Mat& image, vector<KeyPoint>& keypoints, Mat& descriptors);
 
 	protected:
 		void detectImpl(const Mat& image, vector<KeyPoint>& keypoints, const Mat& mask = Mat()) const;

@@ -10,7 +10,7 @@ This class provides utilities for computing key points and different types of de
 
 #include "DescriptorType.h"
 #include <opencv2/opencv.hpp>
-
+#include "opencv2\xfeatures2d\nonfree.hpp"  //3.0 version
 using namespace cv;
 
 class DescriptorUtil

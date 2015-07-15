@@ -6,8 +6,6 @@ This class provides utilities for computing key points and different types of de
 
 #include "DescriptorUtil.h"
 #include "NewDescriptorExtractor.h"
-//#include <opencv2\nonfree\features2d.hpp>
-#include "opencv2\xfeatures2d\nonfree.hpp"  //3.0 version
 #include <iostream>
 #include <fstream>
 using namespace std;

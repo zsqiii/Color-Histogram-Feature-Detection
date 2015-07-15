@@ -917,4 +917,14 @@ namespace cv
 		(*this)(image, Mat(), keypoints, descriptors, true);
 	}
 
+//------------------------------ compute --------------------------------------
+// Compute the descriptor with a given color image and array of keypoints
+// Preconditions:  1. keypoints and images are correctly formatted
+//				   2. images and keypoints are at the same level of smotthing
+// Postconditions: descritops are filled
+//-----------------------------------------------------------------------------
+	void NEWSIFT::compute(const Mat& image, vector<KeyPoint>& keypoints, Mat& descriptors)
+	{
+		this->computeImpl(image, keypoints, descriptors);
+	}
 }
