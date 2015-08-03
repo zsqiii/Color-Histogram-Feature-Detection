@@ -45,8 +45,8 @@ struct DescriptorType {
     DescriptorType(string code)
     {
         first = convertHelper(code);
-        doubleDescriptor = false;
-        second = NONE;
+        doubleDescriptor = true;
+		second = GRAY_SIFT;
     }
     // Default constructor for a descriptor type is grayscale sift
     DescriptorType() : doubleDescriptor(false), first(GRAY_SIFT), second(NONE) { }

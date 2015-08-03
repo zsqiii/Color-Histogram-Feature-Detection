@@ -685,6 +685,18 @@ namespace cv
 		{
 			float rbin = RBin[k], cbin = CBin[k];
 			int binIndex = int(colorBucketsIndex[k]);
+			// RGV color value for keypoint pixel k
+			int red = RedBin[k];
+			int blue = BlueBin[k];
+			int green = GreenBin[k];
+			// weight
+			float redWeight = 1.0 - std::min(std::max((red - 63.5) / 128, 0.0), 1.0);
+			float blueWeight = 1.0 - std::min(std::max((blue - 63.5) / 128, 0.0), 1.0);
+			float greenWeight = 1.0 - std::min(std::max((green - 63.5) / 128, 0.0), 1.0);
+			// weight container
+			float rWeight[2] = {redWeight, (1.0 - redWeight)};
+			float bWeight[2] = {blueWeight, (1.0 - blueWeight) };
+			float gWeight[2] = {greenWeight, (1.0 - greenWeight) };
 
 			int r0 = cvFloor(rbin);
 			int c0 = cvFloor(cbin);
@@ -694,25 +706,30 @@ namespace cv
 			//// histogram update using tri-linear interpolation
 			// vote is weighted by 1 in colo histogram
 			// (while vote is weighted by gradient magnitude in grediant orientation histogram)
+
 			float v_r1 = 1*rbin, v_r0 = 1 - v_r1;
 			float v_rc11 = v_r1*cbin, v_rc10 = v_r1 - v_rc11;
 			float v_rc01 = v_r0*cbin, v_rc00 = v_r0 - v_rc01; 
-			float v_rco111 = 0, v_rco110 = v_rc11 - v_rco111;
-			float v_rco101 = 0, v_rco100 = v_rc10 - v_rco101;
-			float v_rco011 = 0, v_rco010 = v_rc01 - v_rco011;
-			float v_rco001 = 0, v_rco000 = v_rc00 - v_rco001;
-
-			//Voting
-			int idx = ((r0 + 1)*(d + 2) + c0 + 1)*(n + 2) + binIndex;
-			hist[idx] += v_rco000;
-			hist[idx + 1] += v_rco001;
-			hist[idx + (n + 2)] += v_rco010;
-			hist[idx + (n + 3)] += v_rco011;
-			hist[idx + (d + 2)*(n + 2)] += v_rco100;
-			hist[idx + (d + 2)*(n + 2) + 1] += v_rco101;
-			hist[idx + (d + 3)*(n + 2)] += v_rco110;
-			hist[idx + (d + 3)*(n + 2) + 1] += v_rco111;
-
+			float v_rco110 = v_rc11;
+			float v_rco100 = v_rc10;
+			float v_rco010 = v_rc01;
+			float v_rco000 = v_rc00;
+			for (int red = 0; red < 2; red++) 
+			{
+				for (int green = 0; green < 2; green++) 
+				{
+					for (int blue = 0; blue < 2; blue++) 
+					{
+						//Voting
+						int idx = ((r0 + 1)*(d + 2) + c0 + 1)*(n + 2) + binIndex;
+						float temp = v_rco000 * rWeight[red] * gWeight[green] * bWeight[blue];
+						hist[idx] += v_rco000 * rWeight[red] * gWeight[green] * bWeight[blue];
+						hist[idx + (n + 2)] += v_rco010 * rWeight[red] * gWeight[green] * bWeight[blue];
+						hist[idx + (d + 2)*(n + 2)] += v_rco100 * rWeight[red] * gWeight[green] * bWeight[blue];
+						hist[idx + (d + 3)*(n + 2)] += v_rco110 * rWeight[red] * gWeight[green] * bWeight[blue];
+					}
+				}
+			}
 		}
 //-------------------------------------------------------------------------------------
 		// finalize histogram, since the orientation histograms are circular fixes things 
