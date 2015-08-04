@@ -721,8 +721,8 @@ namespace cv
 					for (int blue = 0; blue < 2; blue++) 
 					{
 						//Voting
+						binIndex = 4 * red + 2 * green + blue;
 						int idx = ((r0 + 1)*(d + 2) + c0 + 1)*(n + 2) + binIndex;
-						float temp = v_rco000 * rWeight[red] * gWeight[green] * bWeight[blue];
 						hist[idx] += v_rco000 * rWeight[red] * gWeight[green] * bWeight[blue];
 						hist[idx + (n + 2)] += v_rco010 * rWeight[red] * gWeight[green] * bWeight[blue];
 						hist[idx + (d + 2)*(n + 2)] += v_rco100 * rWeight[red] * gWeight[green] * bWeight[blue];

@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 	if (argc == 1) {
 		argv = new char*[8];
 		argv[0] = "../Debug/ColorHist.exe";
-		argv[1] = "../images/graf/";
+		argv[1] = "../images/bark/";
 		argv[2] = "2";
 		argv[3] = "img1.ppm";
 		argv[4] = "img2.ppm";
