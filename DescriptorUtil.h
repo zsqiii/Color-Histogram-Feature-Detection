@@ -1,5 +1,5 @@
 /*
-Authors: Nick Huebner, Clark Olson
+Authors: Nick Huebner, Clark Olson, Siqi Zhang
 DescriptorUtil.h
 
 This class provides utilities for computing key points and different types of descriptors.
@@ -9,6 +9,10 @@ This class provides utilities for computing key points and different types of de
 #define SIFTPROGRAM_H
 
 #include "DescriptorType.h"
+#include "ColorHistSIFT.h"
+#include "HueSatSIFT.h"
+#include "OPSIFT.h"
+#include <opencv2\features2d.hpp>
 #include <opencv2/opencv.hpp>
 #include "opencv2\xfeatures2d\nonfree.hpp"  //3.0 version
 using namespace cv;

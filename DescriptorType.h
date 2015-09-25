@@ -1,8 +1,11 @@
 /*
-Authors: Nick Huebner, Clark Olson
+Authors: Nick Huebner, Clark Olson, Siqi Zhang
 DescriptorType.h
 
 Enum and structure for managing the types of descriptors in a clean way
+History log: 
+	1. Descriptor name NEWSIFT was changed to COLOR_HIST_SIFT on 8/27/2015
+	2. Adde a new type of descriptor: HUE_SAT_SIFT on 8/27/2015
 */
 
 #ifndef DESCRIPTOR_TYPE_H
@@ -12,8 +15,9 @@ Enum and structure for managing the types of descriptors in a clean way
 using namespace std;
 
 // Enum of the four basic descriptor types that have been implemented so far
+// change NEW_DESCRIPTOR to COLOR_HIST_SIFT
 enum DESC_TYPES {
-    GRAY_SIFT, GRAY_SURF, OPPONENT_SIFT, NEW_DESCRIPTOR, NONE
+	GRAY_SIFT, GRAY_SURF, OPPONENT_SIFT, COLOR_HIST_SIFT, HUE_SAT_SIFT, NONE
 };
 
 // A struct that holds the type of a descriptor
@@ -33,9 +37,12 @@ struct DescriptorType {
 		else if (code == "OPSIFT") {
             return OPPONENT_SIFT;
 		} 
-		else if (code == "NEWSIFT") {
-			return NEW_DESCRIPTOR;
+		else if (code == "CHSIFT") {
+			return COLOR_HIST_SIFT;
 		} 
+		else if (code == "HSSIFT") {
+			return HUE_SAT_SIFT;
+		}
 		else {
             return NONE;
         }
@@ -45,7 +52,7 @@ struct DescriptorType {
     DescriptorType(string code)
     {
         first = convertHelper(code);
-        doubleDescriptor = true;
+        doubleDescriptor = false;
 		second = GRAY_SIFT;
     }
     // Default constructor for a descriptor type is grayscale sift

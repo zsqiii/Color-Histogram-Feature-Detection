@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 		argv[3] = "img1.ppm";
 		argv[4] = "img2.ppm";
 		argv[5] = "1";
-		argv[6] = "NEWSIFT";
+		argv[6] = "HSSIFT";
 		argv[7] = "H1to2p.txt";
 	}
 
@@ -41,7 +41,8 @@ int main(int argc, char *argv[]) {
 
 		// Load images and compute keypoints for each image
 		for (int i = 0; i < data.numImgs; ++i) {
-			images[i] = cv::cvarrToMat(cvLoadImage((data.relativePath + data.imageNames[i]).c_str()));
+			images[i] = imread((data.relativePath + data.imageNames[i]).c_str());
+			//cv::cvarrToMat(cvLoadImage((data.relativePath + data.imageNames[i]).c_str()));
 			cout << ">> Computing keypoints for " << data.imageNames[i] << "..." << endl;
 
 			// Load from file or detect new features

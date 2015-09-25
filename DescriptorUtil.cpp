@@ -5,7 +5,6 @@ This class provides utilities for computing key points and different types of de
 */
 
 #include "DescriptorUtil.h"
-#include "NewDescriptorExtractor.h"
 #include <iostream>
 #include <fstream>
 using namespace std;
@@ -73,26 +72,41 @@ Mat DescriptorUtil::computeDescriptors(Mat& img, vector<KeyPoint> &keypoints, DE
 		Ptr<SIFT> sift = SIFT::create();
 		sift->compute(img, kpts, descriptors);
     }
-	// New Descriptor: descriptor size = 128
-	else if (type == NEW_DESCRIPTOR) {
-		//opencv 2.x version
-		//NewSiftDescriptorExtractor newSiftExtractor;
-		//newSiftExtractor.compute(img, kpts, descriptors);
-		//3.0 version
-		Ptr<NEWSIFT> newsift = NEWSIFT::create();
-		newsift->compute(img, kpts, descriptors);
-	}
 	// SURF Descriptor: descriptor size = 64
 	else if (type == GRAY_SURF) {
 		//SurfDescriptorExtractor surfExtractor;
 		//surfExtractor.compute(img, kpts, descriptors);
+		Ptr<SURF> surf = SURF::create();
+		surf->compute(img, kpts, descriptors);
 	}
-    // Opponent SIFT: descriptor size = 384	... WHY IS THIS CRASHING?
-    else if (type == OPPONENT_SIFT) {
-		Ptr<DescriptorExtractor> siftExtractor = new SiftDescriptorExtractor;
-        //OpponentColorDescriptorExtractor opponentExtractor(siftExtractor);
-        //opponentExtractor.compute(img, kpts, descriptors);
-    }
+	// Opponent SIFT: descriptor size = 384	... WHY IS THIS CRASHING?
+	else if (type == OPPONENT_SIFT) {
+		//Ptr<DescriptorExtractor> siftExtractor = new SiftDescriptorExtractor;
+		//OpponentColorDescriptorExtractor opponentExtractor(siftExtractor);
+		//opponentExtractor.compute(img, kpts, descriptors);
+		//Ptr<DescriptorExtractor> oppDescExtractor = new SiftDescriptorExtractor(;
+		//cv::oppo opponentDescExtractor(oppDescExtractor);
+		Ptr<OPSIFT>opsift = OPSIFT::create();
+		opsift->compute(img, kpts, descriptors);
+	}
+	// Color histogram SIFT : descriptor size = 128
+	else if (type == COLOR_HIST_SIFT) {
+		//opencv 2.x version
+		//NewSiftDescriptorExtractor newSiftExtractor;
+		//newSiftExtractor.compute(img, kpts, descriptors);
+		//3.0 version
+		Ptr<ColorHistSIFT> chSIFT = ColorHistSIFT::create();
+		chSIFT->compute(img, kpts, descriptors);
+	}
+	// Hue weighted by saturation SIFT : descriptor size = 128
+	else if (type == HUE_SAT_SIFT) {
+		//opencv 2.x version
+		//NewSiftDescriptorExtractor newSiftExtractor;
+		//newSiftExtractor.compute(img, kpts, descriptors);
+		//3.0 version
+		Ptr<HueSatSIFT> hsSIFT = HueSatSIFT::create();
+		hsSIFT->compute(img, kpts, descriptors);
+	}
 	else if (type == NONE) { }
 
     return descriptors;
