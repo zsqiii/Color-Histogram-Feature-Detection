@@ -61,7 +61,6 @@ namespace cv
 
 	/*!
 	HueSatSIFT implementation.
-
 	*/
 	class CV_EXPORTS_W HueSatSIFT : public Feature2D
 	{

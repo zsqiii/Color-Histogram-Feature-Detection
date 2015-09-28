@@ -574,14 +574,10 @@ namespace cv
 	static void calcNEWSIFTDescriptor(const Mat& img, Point2f ptf, float ori, float scl,
 		int d, int n, float* dst)
 	{
-		//convert RGB image to HSV
-		Mat HSVImg;
-		cvtColor(img, HSVImg, CV_BGR2HSV);
 		Point pt(cvRound(ptf.x), cvRound(ptf.y));	//point object
 		float cos_t = cosf(ori*(float)(CV_PI / 180));
 		float sin_t = sinf(ori*(float)(CV_PI / 180));
-		//hue value is ranged from 0 to 180 in opencv 3.0
-		float bins_per_degree = n / 180.f;
+		float bins_per_degree = n / 360.f;
 		float exp_scale = -1.f / (d * d * 0.5f);
 		float hist_width = NEWSIFT_DESCR_SCL_FCTR * scl;
 		int radius = cvRound(hist_width * 1.4142135623730951f * (d + 1) * 0.5f);
@@ -785,7 +781,9 @@ namespace cv
 	{
 		int firstOctave = -1, actualNOctaves = 0, actualNLayers = 0;
 		Mat image = _image.getMat(), mask = _mask.getMat();
-
+		//convert RGB image to HSV
+		Mat HSVImg;
+		cvtColor(image, HSVImg, CV_BGR2HSV);
 		if (image.empty() || image.depth() != CV_8U)
 			CV_Error(CV_StsBadArg, "image is empty or has incorrect depth (!=CV_8U)");
 
@@ -811,9 +809,9 @@ namespace cv
 			actualNOctaves = maxOctave - firstOctave + 1;
 		}
 		// base is a grey image
-		Mat base = createInitialImage(image, firstOctave < 0, (float)sigma);
+		Mat base = createInitialImage(HSVImg, firstOctave < 0, (float)sigma);
 		//initialize color image
-		Mat colorBase = createInitialColorImage(image, firstOctave < 0, (float)sigma);
+		Mat colorBase = createInitialColorImage(HSVImg, firstOctave < 0, (float)sigma);
 		vector<Mat> gpyr, dogpyr, colorGpyr; // colorGpyr is a gaussian pyramid for color image
 		int nOctaves = actualNOctaves > 0 ? actualNOctaves : cvRound(log((double)std::min(base.cols, base.rows)) / log(2.) - 2) - firstOctave;
 

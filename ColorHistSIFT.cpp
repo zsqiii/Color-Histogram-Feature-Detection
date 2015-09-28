@@ -582,9 +582,6 @@ namespace cv
 	static void calcNEWSIFTDescriptor(const Mat& img, Point2f ptf, float ori, float scl,
 		int d, int n, float* dst)
 	{
-		//Mat greyImg;
-		//cvtColor(img, greyImg, CV_BGR2GRAY);
-		imwrite("z", img);
 		Point pt(cvRound(ptf.x), cvRound(ptf.y));	//point object
 		float cos_t = cosf(ori*(float)(CV_PI / 180));	
 		float sin_t = sinf(ori*(float)(CV_PI / 180));
