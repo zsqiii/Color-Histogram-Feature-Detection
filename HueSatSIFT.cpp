@@ -781,9 +781,6 @@ namespace cv
 	{
 		int firstOctave = -1, actualNOctaves = 0, actualNLayers = 0;
 		Mat image = _image.getMat(), mask = _mask.getMat();
-		//convert RGB image to HSV
-		Mat HSVImg;
-		cvtColor(image, HSVImg, CV_BGR2HSV);
 		if (image.empty() || image.depth() != CV_8U)
 			CV_Error(CV_StsBadArg, "image is empty or has incorrect depth (!=CV_8U)");
 
@@ -809,9 +806,12 @@ namespace cv
 			actualNOctaves = maxOctave - firstOctave + 1;
 		}
 		// base is a grey image
-		Mat base = createInitialImage(HSVImg, firstOctave < 0, (float)sigma);
+		Mat base = createInitialImage(image, firstOctave < 0, (float)sigma);
 		//initialize color image
-		Mat colorBase = createInitialColorImage(HSVImg, firstOctave < 0, (float)sigma);
+		Mat colorBase = createInitialColorImage(image, firstOctave < 0, (float)sigma);
+		//convert RGB image to HSV
+		Mat HSVBase;
+		cvtColor(colorBase, HSVBase, CV_BGR2HSV);
 		vector<Mat> gpyr, dogpyr, colorGpyr; // colorGpyr is a gaussian pyramid for color image
 		int nOctaves = actualNOctaves > 0 ? actualNOctaves : cvRound(log((double)std::min(base.cols, base.rows)) / log(2.) - 2) - firstOctave;
 
@@ -820,7 +820,7 @@ namespace cv
 		buildGaussianPyramid(base, gpyr, nOctaves);
 		buildDoGPyramid(gpyr, dogpyr);
 		// build color gaussian pyramid
-		buildGaussianPyramid(colorBase, colorGpyr, nOctaves);
+		buildGaussianPyramid(HSVBase, colorGpyr, nOctaves);
 		//t = (double)getTickCount() - t;
 		//printf("pyramid construction time: %g\n", t*1000./tf);
 
